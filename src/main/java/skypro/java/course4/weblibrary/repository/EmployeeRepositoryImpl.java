@@ -1,6 +1,7 @@
 package skypro.java.course4.weblibrary.repository;
 
 import org.springframework.stereotype.Repository;
+import skypro.java.course4.weblibrary.controller.EmployeeController;
 import skypro.java.course4.weblibrary.model.Employee;
 
 import java.util.List;
@@ -8,13 +9,19 @@ import java.util.List;
 @Repository
 public class EmployeeRepositoryImpl implements EmployeeRepository{
     private final List<Employee> employeeList = List.of(
-            new Employee("Катя", 48000),
-            new Employee("Дима", 43000),
-            new Employee("Олег", 45000),
-            new Employee("Вика", 35000));
+            new Employee(1,"Катя", "Ivanova", 48000, 1),
+            new Employee(2,"Дима", "Petrova", 56000, 1),
+            new Employee(3,"Олег", "Deeva", 37000, 2),
+            new Employee(4,"Вика", "Zolova",35000, 3));
 
     @Override
     public List<Employee> getAllEmployees() {
         return employeeList;
     }
+
+    @Override
+    public Employee getEmployeeByID() {
+        return null;
+    }
+
 }
