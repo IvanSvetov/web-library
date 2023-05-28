@@ -47,56 +47,5 @@ public class EmployeeController {
     public List<Employee> getEmployeesWithSalaryHigherThan(@RequestParam("salary") Integer compareSalary) {
         return null;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- /*   @GetMapping
-    public List<Employee> showCounter() {
-        return employeeService.getAllEmployees();
-    }*/
-/*    @GetMapping("/salary/sum")
-    public String showSalarySum() {
-        return employeeService.salarySum(employeeService.getAllEmployees());
-    }
-
-
-    @GetMapping("/salary/min")
-    public String showSalaryMin() {
-        return employeeService.salaryMin(employeeService.getAllEmployees());
-    }
-
-    @GetMapping("/salary/max")
-    public String showSalaryMax() {
-        return employeeService.salaryMax(employeeService.getAllEmployees());
-    }
-    @GetMapping("/avg-salary")
-    public String showAvg() {
-        return employeeService.getAvg(employeeService.getAllEmployees());
-    }
-    @GetMapping("/high-salary")
-    public String showMoreThanAvg() {
-        return employeeService.getMoreThanAvg(employeeService.getAllEmployees());
-    }*/
 }
 
-//    localhost:8080/sayHello
-//    localhost:8080/employee/salary/sum
-//    localhost:8080/employee/salary/min
-//    localhost:8080/employee/salary/max
-//    localhost:8080/employee/avg-salary
-//    localhost:8080/employee/high-salary

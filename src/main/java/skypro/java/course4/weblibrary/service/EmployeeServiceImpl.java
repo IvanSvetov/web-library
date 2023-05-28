@@ -1,8 +1,10 @@
 package skypro.java.course4.weblibrary.service;
 
 import org.springframework.stereotype.Service;
+import skypro.java.course4.weblibrary.exceptions.EmployeeExceptionHandler;
 import skypro.java.course4.weblibrary.model.Employee;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,16 +21,16 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public Employee getEmployeeByID(Long id) {
-        if (employees.containsKey(id)) {
-
+        if (!employees.containsKey(id)) {
+            throw new EmployeeExceptionHandler();
         }
         return employees.get(id);
     }
 
     @Override
     public Employee add(Employee employee) {
-        if (employees.containsKey(employee.getId())){
-
+        if (!employees.containsKey(employee.getId())){
+            throw new EmployeeExceptionHandler();
         }
         Employee createEmployee = employees.put((long) employee.getId(), employee);
 
@@ -38,7 +40,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public void remove(Long id) {
         if (!employees.containsKey(id)) {
-
+            throw new EmployeeExceptionHandler();
         }
         Employee employee = employees.remove(id);
     }
@@ -46,15 +48,14 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public Employee find(Long id) {
         if (employees.containsKey(id)) {
-
         }
         return employees.get(id);
     }
 
     @Override
     public Employee edit(Employee employee) {
-        if (employees.containsKey(employee.getId())) {
-
+        if (!employees.containsKey(employee.getId())) {
+            throw new EmployeeExceptionHandler();
         }
         Employee updated = employees.put((long) employee.getId(), employee);
         return updated;
@@ -62,7 +63,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public Collection<Employee> findAll() {
-        return null;
+        return (Collection<Employee>) employees;
     }
 
 
