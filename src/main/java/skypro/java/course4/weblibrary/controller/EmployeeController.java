@@ -38,9 +38,8 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public Employee deleteEmployee(@PathVariable Long id) {
+    public void deleteEmployee(@PathVariable Long id) {
         employeeService.remove(id);
-        return null;
     }
 
     @GetMapping("/salaryHigherThan")

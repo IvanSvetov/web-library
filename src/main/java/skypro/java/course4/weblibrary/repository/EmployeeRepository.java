@@ -8,6 +8,5 @@ public interface EmployeeRepository {
 
     public List<Employee> getAllEmployees();
 
-    public Employee getEmployeeByID();
-
+    public Employee getEmployeeByID(int id);
 }
