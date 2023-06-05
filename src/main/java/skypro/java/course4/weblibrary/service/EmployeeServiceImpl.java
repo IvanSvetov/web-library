@@ -1,10 +1,14 @@
 package skypro.java.course4.weblibrary.service;
 
 import org.springframework.stereotype.Service;
+import skypro.java.course4.weblibrary.exceptions.EmployeeAlreadyExistsExeption;
 import skypro.java.course4.weblibrary.exceptions.EmployeeExceptionHandler;
+import skypro.java.course4.weblibrary.exceptions.EmployeeNotFoudExeption;
 import skypro.java.course4.weblibrary.model.Employee;
+import skypro.java.course4.weblibrary.repository.EmployeeRepository;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,58 +16,48 @@ import java.util.Map;
 @Service
 public class EmployeeServiceImpl implements EmployeeService{
 
-    private final Map<Long, Employee> employees;
+    private final EmployeeRepository employeeRepository;
 
 
-    public EmployeeServiceImpl() {
-        employees = new HashMap<>();
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
     }
 
     @Override
     public Employee getEmployeeByID(Long id) {
-        if (!employees.containsKey(id)) {
-            throw new EmployeeExceptionHandler();
-        }
-        return employees.get(id);
+        return employeeRepository.getEmployeeByID(id);
     }
 
     @Override
     public Employee add(Employee employee) {
-        if (!employees.containsKey(employee.getId())){
-            throw new EmployeeExceptionHandler();
-        }
-        Employee createEmployee = employees.put((long) employee.getId(), employee);
-
-        return createEmployee;
+        return employeeRepository.addEmployee(employee);
     }
 
     @Override
     public void remove(Long id) {
-        if (!employees.containsKey(id)) {
-            throw new EmployeeExceptionHandler();
-        }
-        Employee employee = employees.remove(id);
+        employeeRepository.removeEmployee(id);
     }
 
-    @Override
-    public Employee find(Long id) {
-        if (employees.containsKey(id)) {
-        }
-        return employees.get(id);
-    }
 
     @Override
-    public Employee edit(Employee employee) {
-        if (!employees.containsKey(employee.getId())) {
-            throw new EmployeeExceptionHandler();
-        }
-        Employee updated = employees.put((long) employee.getId(), employee);
-        return updated;
+    public Employee editEmployee(Employee employee, Long id) {
+        return employeeRepository.editEmployee(id, employee);
     }
 
     @Override
     public Collection<Employee> findAll() {
-        return (Collection<Employee>) employees;
+        return employeeRepository.getAllEmployees();
+    }
+
+    @Override
+    public Collection<Employee> salaryHighterThan(Integer compareSalary) {
+        Collection<Employee> salaryHighter = new ArrayList<>();
+        for (Employee employee : findAll()) {
+            if (employee.getSalary() > compareSalary) {
+                salaryHighter.add(employee);
+            }
+        }
+        return salaryHighter;
     }
 
 

@@ -10,11 +10,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 @RestControllerAdvice
-public class EmployeeExceptionHandler extends RuntimeException {
+public class EmployeeExceptionHandler{
 
     @ExceptionHandler
     public ResponseEntity<?> handleIOException(IOException ioException) {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler
@@ -24,6 +24,17 @@ public class EmployeeExceptionHandler extends RuntimeException {
 
     @ExceptionHandler
     public ResponseEntity<?> handleException(Exception Exception) {
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleEmployeeNotFoundException(EmployeeNotFoudExeption employeeNotFoudExeption) {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler
+    public ResponseEntity<?> handleEmployeeAlreadyExistsException(EmployeeAlreadyExistsExeption employeeAlreadyExistsExeption) {
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 }
+
+

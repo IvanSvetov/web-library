@@ -2,39 +2,40 @@ package skypro.java.course4.weblibrary.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import skypro.java.course4.weblibrary.model.Employee;
-import skypro.java.course4.weblibrary.repository.EmployeeRepository;
-import skypro.java.course4.weblibrary.repository.EmployeeRepositoryImpl;
 import skypro.java.course4.weblibrary.service.EmployeeService;
-import skypro.java.course4.weblibrary.service.EmployeeServiceImpl;
 
-import java.util.List;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
-    ResponseEntity<Employee> ResponseEntity;
+
 
     public EmployeeController(EmployeeService employeeService) {
 
         this.employeeService = employeeService;
     }
+    @GetMapping
+    public Collection<Employee> getAll() {
+        return employeeService.findAll();
+    }
 
-    @PostMapping("/")
+    @PostMapping
     public void addEmployee(@RequestBody Employee employee) {
-
+        employeeService.add(employee);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Employee> editEmployee(@RequestBody Employee employee, @PathVariable Long id) {
-        Employee foundStudent = employeeService.edit(employee);
-        return ResponseEntity;
+        Employee foundStudent = employeeService.editEmployee(employee, id);
+        return ResponseEntity.ok(foundStudent);
     }
 
     @GetMapping("/{id}")
     public Employee getByID(@PathVariable Long id) {
-        return employeeService.find(id);
+        return employeeService.getEmployeeByID(id);
     }
 
     @DeleteMapping("/{id}")
@@ -43,8 +44,8 @@ public class EmployeeController {
     }
 
     @GetMapping("/salaryHigherThan")
-    public List<Employee> getEmployeesWithSalaryHigherThan(@RequestParam("salary") Integer compareSalary) {
-        return null;
+    public Collection<Employee> getEmployeesWithSalaryHigherThan(@RequestParam("salary") Integer compareSalary) {
+        return employeeService.salaryHighterThan(compareSalary);
     }
 }
 

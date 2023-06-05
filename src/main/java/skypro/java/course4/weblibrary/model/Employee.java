@@ -13,7 +13,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class Employee {
-    private final int id;
+    private Long id;
     @NotBlank(message = "Name is mandatory")
     private final String firstName;
     @NotBlank(message = "Name is mandatory")
