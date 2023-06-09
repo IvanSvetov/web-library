@@ -1,20 +1,13 @@
 package skypro.java.course4.weblibrary.service;
 
 import org.springframework.stereotype.Service;
-import skypro.java.course4.weblibrary.exceptions.EmployeeAlreadyExistsExeption;
-import skypro.java.course4.weblibrary.exceptions.EmployeeExceptionHandler;
-import skypro.java.course4.weblibrary.exceptions.EmployeeNotFoudExeption;
 import skypro.java.course4.weblibrary.model.Employee;
 import skypro.java.course4.weblibrary.repository.EmployeeRepository;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
-public class EmployeeServiceImpl implements EmployeeService{
+public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 
@@ -24,41 +17,81 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    public Employee getEmployeeByID(Long id) {
-        return employeeRepository.getEmployeeByID(id);
-    }
-
-    @Override
-    public Employee add(Employee employee) {
-        return employeeRepository.addEmployee(employee);
-    }
-
-    @Override
-    public void remove(Long id) {
-        employeeRepository.removeEmployee(id);
-    }
-
-
-    @Override
-    public Employee editEmployee(Employee employee, Long id) {
-        return employeeRepository.editEmployee(id, employee);
-    }
-
-    @Override
     public Collection<Employee> findAll() {
-        return employeeRepository.getAllEmployees();
+        List<Employee> result = new ArrayList<>();
+        employeeRepository.findAll()
+                .forEach(result::add);
+
+        return result;
     }
 
     @Override
-    public Collection<Employee> salaryHighterThan(Integer compareSalary) {
-        Collection<Employee> salaryHighter = new ArrayList<>();
-        for (Employee employee : findAll()) {
-            if (employee.getSalary() > compareSalary) {
-                salaryHighter.add(employee);
-            }
-        }
-        return salaryHighter;
+    public void addEmployee(Employee employee) {
+        employeeRepository.save(employee);
     }
+
+    @Override
+    public void deleteById(Integer id) {
+        employeeRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Employee> findById(Integer id) {
+        return employeeRepository.findById(id);
+    }
+
+    @Override
+    public List<Employee> getAllEmployeesByName(String name) {
+        return employeeRepository.findByName(name);
+    }
+
+    @Override
+    public List<Employee> getAllEmployeesByNameAndSalary(String name, int salary) {
+        return employeeRepository.findByNameAndSalary(name, salary);
+    }
+
+
+
+
+//    @Override
+//    public Employee getEmployeeByID(Long id) {
+//        return employeeRepository.getEmployeeByID(id);
+//    }
+//
+//    @Override
+//    public Employee add(Employee employee) {
+//        return employeeRepository.addEmployee(employee);
+//    }
+//
+//    @Override
+//    public void remove(Long id) {
+//        employeeRepository.removeEmployee(id);
+//    }
+//
+//
+//    @Override
+//    public Employee editEmployee(Employee employee, Long id) {
+//        return employeeRepository.editEmployee(id, employee);
+//    }
+//
+//
+//
+//    @Override
+//    public Collection<Employee> salaryHighterThan(Integer compareSalary) {
+//        Collection<Employee> salaryHighter = new ArrayList<>();
+//        for (Employee employee : findAll()) {
+//            if (employee.getSalary() > compareSalary) {
+//                salaryHighter.add(employee);
+//            }
+//        }
+//        return salaryHighter;
+//    }
+
+
+
+
+//              NOT USE
+
 
 
 //    @Override
