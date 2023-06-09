@@ -1,59 +1,51 @@
 package skypro.java.course4.weblibrary.controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import skypro.java.course4.weblibrary.model.Employee;
-import skypro.java.course4.weblibrary.repository.EmployeeRepository;
-import skypro.java.course4.weblibrary.repository.EmployeeRepositoryImpl;
 import skypro.java.course4.weblibrary.service.EmployeeService;
 
-import java.util.List;
+import java.util.Collection;
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/employees")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+
 
     public EmployeeController(EmployeeService employeeService) {
 
         this.employeeService = employeeService;
     }
-
     @GetMapping
-    public List<Employee> showCounter() {
-        return employeeService.getAllEmployees();
+    public Collection<Employee> getAll() {
+        return employeeService.findAll();
     }
 
-
-    @GetMapping("/salary/sum")
-    public String showSalarySum() {
-        return employeeService.salarySum(employeeService.getAllEmployees());
+    @PostMapping
+    public void addEmployee(@RequestBody Employee employee) {
+        employeeService.add(employee);
     }
 
-
-    @GetMapping("/salary/min")
-    public String showSalaryMin() {
-        return employeeService.salaryMin(employeeService.getAllEmployees());
+    @PutMapping("/{id}")
+    public ResponseEntity<Employee> editEmployee(@RequestBody Employee employee, @PathVariable Long id) {
+        Employee foundStudent = employeeService.editEmployee(employee, id);
+        return ResponseEntity.ok(foundStudent);
     }
 
-    @GetMapping("/salary/max")
-    public String showSalaryMax() {
-        return employeeService.salaryMax(employeeService.getAllEmployees());
+    @GetMapping("/{id}")
+    public Employee getByID(@PathVariable Long id) {
+        return employeeService.getEmployeeByID(id);
     }
-    @GetMapping("/avg-salary")
-    public String showAvg() {
-        return employeeService.getAvg(employeeService.getAllEmployees());
+
+    @DeleteMapping("/{id}")
+    public void deleteEmployee(@PathVariable Long id) {
+        employeeService.remove(id);
     }
-    @GetMapping("/high-salary")
-    public String showMoreThanAvg() {
-        return employeeService.getMoreThanAvg(employeeService.getAllEmployees());
+
+    @GetMapping("/salaryHigherThan")
+    public Collection<Employee> getEmployeesWithSalaryHigherThan(@RequestParam("salary") Integer compareSalary) {
+        return employeeService.salaryHighterThan(compareSalary);
     }
 }
 
-//    localhost:8080/sayHello
-//    localhost:8080/employee/salary/sum
-//    localhost:8080/employee/salary/min
-//    localhost:8080/employee/salary/max
-//    localhost:8080/employee/avg-salary
-//    localhost:8080/employee/high-salary

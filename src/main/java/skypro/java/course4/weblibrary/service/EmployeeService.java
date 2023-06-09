@@ -2,19 +2,18 @@ package skypro.java.course4.weblibrary.service;
 
 import skypro.java.course4.weblibrary.model.Employee;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface EmployeeService {
 
+    Employee getEmployeeByID(Long id);
+    Employee add(Employee employee);
+    void remove(Long id);
 
-    List<Employee> getAllEmployees();
-    String salarySum(List<Employee> employeeList);
+    Employee editEmployee(Employee employee, Long id);
+    Collection<Employee> findAll();
+    Collection<Employee> salaryHighterThan(Integer compareSalary);
 
-    String salaryMin(List<Employee> employeeList);
 
-    String salaryMax(List<Employee> employeeList);
 
-    String getAvg(List<Employee> employeeList);
-
-    String getMoreThanAvg(List<Employee> employeeList);
 }
