@@ -50,7 +50,6 @@ public class EmployeeController {
             return employeeService.getAllEmployeesByNameAndSalary(name, salaryInt);
         }
     }
-
     @GetMapping()
     public Employee getEmployeeWithHighSalary(Collection<Employee> employees) {
         return employeeService.getEmployeeWithHighestSalary(employees);
