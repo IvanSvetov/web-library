@@ -50,7 +50,31 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findByNameAndSalary(name, salary);
     }
 
+    @Override
+    public Employee getEmployeeWithHighestSalary(Collection<Employee> employees) {
+        Employee employeeWithHighSalary = null;
+        int highSalary = 0;
+        for (Employee employee:employees){
+            if (highSalary < employee.getSalary()){
+                highSalary = employee.getSalary();
+                employeeWithHighSalary = employee;
+            }
+        }
+        return employeeWithHighSalary;
+    }
 
+
+    //    public String salaryMax(List<Employee> employeeList) {
+//        int maxSalary = 0;
+//        String maxEmployer = null;
+//        for (int i = 0; i < employeeList.size(); i++) {
+//            if (employeeList.get(i).getSalary() > maxSalary) {
+//                maxSalary = employeeList.get(i).getSalary();
+//                maxEmployer = employeeList.get(i).getName();
+//            }
+//        }
+//        return "Сотрудник с максимальной зарплатой " + maxEmployer + " " + maxSalary ;
+//    }
 
 
 //    @Override

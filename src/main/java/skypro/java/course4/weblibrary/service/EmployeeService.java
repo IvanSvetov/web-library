@@ -14,6 +14,8 @@ public interface EmployeeService {
     Optional<Employee> findById(Integer id);
     List<Employee> getAllEmployeesByName(String name);
     List<Employee> getAllEmployeesByNameAndSalary(String name, int salary);
+    Employee getEmployeeWithHighestSalary(Collection<Employee>employees);
+
 
 
 
