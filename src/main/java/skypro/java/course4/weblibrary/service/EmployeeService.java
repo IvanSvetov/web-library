@@ -1,5 +1,6 @@
 package skypro.java.course4.weblibrary.service;
 
+import skypro.java.course4.weblibrary.controller.dto.EmployeeDTO;
 import skypro.java.course4.weblibrary.model.Employee;
 
 import java.util.Collection;
@@ -8,13 +9,15 @@ import java.util.Optional;
 
 public interface EmployeeService {
 
-    Collection<Employee> findAll();
+    List<EmployeeDTO> findAll();
     void addEmployee(Employee employee);
     void deleteById(Integer id);
     Optional<Employee> findById(Integer id);
     List<Employee> getAllEmployeesByName(String name);
     List<Employee> getAllEmployeesByNameAndSalary(String name, int salary);
-    Employee getEmployeeWithHighestSalary(Collection<Employee>employees);
+    List<EmployeeDTO> getEmployeeWithHighestSalary();
+    List<EmployeeDTO> getEmployeeByPosition(int positionId);
+    List<EmployeeDTO> getEmployeeByPage(int page);
 
 
 

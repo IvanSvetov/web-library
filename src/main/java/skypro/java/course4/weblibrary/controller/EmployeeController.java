@@ -1,11 +1,13 @@
 package skypro.java.course4.weblibrary.controller;
 import org.springframework.web.bind.annotation.*;
+import skypro.java.course4.weblibrary.controller.dto.EmployeeDTO;
+import skypro.java.course4.weblibrary.controller.dto.EmployeeToDTO;
+import skypro.java.course4.weblibrary.exceptions.EmployeeNotFoudExeption;
 import skypro.java.course4.weblibrary.model.Employee;
 import skypro.java.course4.weblibrary.service.EmployeeService;
-import java.util.Collection;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
@@ -14,14 +16,12 @@ import static java.util.Objects.isNull;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
-
-
     public EmployeeController(EmployeeService employeeService) {
 
         this.employeeService = employeeService;
     }
         @GetMapping("/all")
-    public Collection<Employee> getAll() {
+    public List<EmployeeDTO> getAll() {
         return employeeService.findAll();
     }
 
@@ -34,8 +34,8 @@ public class EmployeeController {
         employeeService.deleteById(id);
     }
     @GetMapping("value = /employees/{id}")
-    public Optional<Employee> findById(@PathVariable (name = "id") Integer id) {
-        return employeeService.findById(id);
+    public EmployeeDTO findById(@PathVariable (name = "id") Integer id) {
+        return EmployeeToDTO.fromEmployee(employeeService.findById(id).orElseThrow(EmployeeNotFoudExeption::new));
     }
 
     @GetMapping()
@@ -50,9 +50,24 @@ public class EmployeeController {
             return employeeService.getAllEmployeesByNameAndSalary(name, salaryInt);
         }
     }
-    @GetMapping()
-    public Employee getEmployeeWithHighSalary(Collection<Employee> employees) {
-        return employeeService.getEmployeeWithHighestSalary(employees);
+    @GetMapping("/withHighestSalary")
+    public List<EmployeeDTO> getEmployeeWithHighSalary() {
+        return employeeService.getEmployeeWithHighestSalary();
+
+    }
+
+    @GetMapping("/byPosition")
+    public List<EmployeeDTO> getEmployeesByPosition(@RequestParam(name = "position", required = false) Integer positionId) {
+        if (isNull(positionId)) {
+            return employeeService.findAll();
+        } else {
+            return employeeService.getEmployeeByPosition(positionId);
+        }
+    }
+
+    @GetMapping("/page")
+    public List<EmployeeDTO> getEmployeeByPage(@RequestParam(name = "page") int page) {
+        return employeeService.getEmployeeByPage(page);
     }
 
 

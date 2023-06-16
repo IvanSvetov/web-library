@@ -1,28 +1,35 @@
 package skypro.java.course4.weblibrary.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import skypro.java.course4.weblibrary.controller.dto.EmployeeDTO;
+import skypro.java.course4.weblibrary.controller.dto.EmployeeToDTO;
 import skypro.java.course4.weblibrary.model.Employee;
+import skypro.java.course4.weblibrary.repository.EmployeePages;
 import skypro.java.course4.weblibrary.repository.EmployeeRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final EmployeePages employeePages;
 
 
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository, EmployeePages employeePages) {
         this.employeeRepository = employeeRepository;
+        this.employeePages = employeePages;
     }
 
     @Override
-    public Collection<Employee> findAll() {
-        List<Employee> result = new ArrayList<>();
-        employeeRepository.findAll()
-                .forEach(result::add);
-
-        return result;
+    public List<EmployeeDTO> findAll() {
+        List<Employee> employees = new ArrayList<>();
+        employeeRepository.findAll().forEach(employees::add);
+        return EmployeeToDTO.fromEmployee(employees);
     }
 
     @Override
@@ -51,16 +58,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee getEmployeeWithHighestSalary(Collection<Employee> employees) {
-        Employee employeeWithHighSalary = null;
-        int highSalary = 0;
-        for (Employee employee:employees){
-            if (highSalary < employee.getSalary()){
-                highSalary = employee.getSalary();
-                employeeWithHighSalary = employee;
-            }
-        }
-        return employeeWithHighSalary;
+    public List<EmployeeDTO> getEmployeeWithHighestSalary() {
+        return EmployeeToDTO.fromEmployee(employeeRepository.findEmployeeWithBiggestSalary());
+    }
+
+    @Override
+    public List<EmployeeDTO> getEmployeeByPosition(int positionId) {
+        return EmployeeToDTO.fromEmployee(employeeRepository.findAllByPositionId(positionId));
+    }
+
+    @Override
+    public List<EmployeeDTO> getEmployeeByPage(int pageIndex) {
+        Pageable employeeOfConcretePage = PageRequest.of(pageIndex, 10);
+        Page<Employee> page = employeePages.findAll(employeeOfConcretePage);
+        return EmployeeToDTO.fromEmployee(page.stream().toList());
     }
 
 
