@@ -1,15 +1,32 @@
 package skypro.java.course4.weblibrary.service;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import skypro.java.course4.weblibrary.controller.dto.EmployeeDTO;
 import skypro.java.course4.weblibrary.controller.dto.EmployeeToDTO;
+import skypro.java.course4.weblibrary.controller.dto.ReportDTO;
+import skypro.java.course4.weblibrary.exceptions.IllegalJsonFileExeption;
+import skypro.java.course4.weblibrary.exceptions.InternalServerError;
+import skypro.java.course4.weblibrary.exceptions.ReportNotFoundExeption;
 import skypro.java.course4.weblibrary.model.Employee;
+import skypro.java.course4.weblibrary.model.Report;
 import skypro.java.course4.weblibrary.repository.EmployeePages;
 import skypro.java.course4.weblibrary.repository.EmployeeRepository;
+import skypro.java.course4.weblibrary.repository.ReportRepository;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,11 +35,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeePages employeePages;
+    private final ObjectMapper objectMapper;
+    private final ReportRepository reportRepository;
 
 
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository, EmployeePages employeePages) {
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository,
+                               EmployeePages employeePages,
+                               ObjectMapper objectMapper,
+                               ReportRepository reportRepository) {
         this.employeeRepository = employeeRepository;
         this.employeePages = employeePages;
+        this.objectMapper = objectMapper;
+        this.reportRepository = reportRepository;
     }
 
     @Override
@@ -74,6 +98,51 @@ public class EmployeeServiceImpl implements EmployeeService {
         return EmployeeToDTO.fromEmployee(page.stream().toList());
     }
 
+    @Override
+    public void upload(MultipartFile employees) {
+        try {
+            String extension = StringUtils.getFilenameExtension(employees.getOriginalFilename());
+            if (!"json".equals(extension)){
+                throw new IllegalJsonFileExeption();
+            }
+            List<EmployeeDTO> employeeDTOS = objectMapper.readValue(
+                    employees.getBytes(),
+                    new TypeReference<>() {
+                    });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IllegalJsonFileExeption();
+        }
+    }
+
+    @Override
+    public int report() {
+        try {
+            Report report = new Report();
+            report.setReport(buildReport());
+            return reportRepository.save(report).getId();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+
+    }
+
+    public String buildReport() throws JsonProcessingException {
+        List<ReportDTO> reports = employeeRepository.buildReports();
+        return objectMapper.writeValueAsString(reports);
+    }
+
+    @Override
+    public Resource downloadReport(int id) {
+        return new ByteArrayResource(
+                reportRepository.findById(id)
+                        .orElseThrow(ReportNotFoundExeption::new)
+                        .getReport()
+                        .getBytes(StandardCharsets.UTF_8)
+        );
+    }
 
     //    public String salaryMax(List<Employee> employeeList) {
 //        int maxSalary = 0;

@@ -28,12 +28,21 @@ public class EmployeeExceptionHandler{
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> handleEmployeeNotFoundException(EmployeeNotFoudExeption employeeNotFoudExeption) {
+    public ResponseEntity<?> handleEmployeeNotFoundException(EmployeeNotFoudExeption employeeNotFoudExeption,
+                                                             ReportNotFoundExeption reportNotFoundExeption) {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler
     public ResponseEntity<?> handleEmployeeAlreadyExistsException(EmployeeAlreadyExistsExeption employeeAlreadyExistsExeption) {
         return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
+    @ExceptionHandler(IllegalJsonFileExeption.class)
+    public ResponseEntity<?> badRequest() {
+        return ResponseEntity.badRequest().build();
+    }
+    @ExceptionHandler(InternalServerError.class)
+    public ResponseEntity<?> internalServerError() {
+        return ResponseEntity.internalServerError().build();
     }
 }
 
