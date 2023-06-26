@@ -22,10 +22,10 @@ public class EmployeeExceptionHandler{
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler
+/*    @ExceptionHandler
     public ResponseEntity<?> handleException(Exception Exception) {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    }*/
 
     @ExceptionHandler
     public ResponseEntity<?> handleEmployeeNotFoundException(EmployeeNotFoudExeption employeeNotFoudExeption,

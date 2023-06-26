@@ -1,14 +1,17 @@
 [
   {
-    "name": "Иван",
-    "salary": 10000
+    "name": "Олег",
+    "salary": 10000,
+    "positionId": 1
   },
   {
-    "name": "Петр",
-    "salary": 20000
+    "name": "Михаил",
+    "salary": 20000,
+    "positionId": 2
   },
   {
-    "name": "Сергей",
-    "salary": 30000
+    "name": "Дмитрий",
+    "salary": 30000,
+    "positionId": 1
   }
 ]

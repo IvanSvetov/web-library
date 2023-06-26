@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -15,13 +16,16 @@ import org.springframework.web.multipart.MultipartFile;
 import skypro.java.course4.weblibrary.controller.dto.EmployeeDTO;
 import skypro.java.course4.weblibrary.controller.dto.EmployeeToDTO;
 import skypro.java.course4.weblibrary.controller.dto.ReportDTO;
+import skypro.java.course4.weblibrary.controller.dto.UploadEmployeeDTO;
 import skypro.java.course4.weblibrary.exceptions.IllegalJsonFileExeption;
 import skypro.java.course4.weblibrary.exceptions.InternalServerError;
 import skypro.java.course4.weblibrary.exceptions.ReportNotFoundExeption;
 import skypro.java.course4.weblibrary.model.Employee;
+import skypro.java.course4.weblibrary.model.Position;
 import skypro.java.course4.weblibrary.model.Report;
 import skypro.java.course4.weblibrary.repository.EmployeePages;
 import skypro.java.course4.weblibrary.repository.EmployeeRepository;
+import skypro.java.course4.weblibrary.repository.PositionRepository;
 import skypro.java.course4.weblibrary.repository.ReportRepository;
 
 import java.io.IOException;
@@ -31,22 +35,26 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeePages employeePages;
     private final ObjectMapper objectMapper;
     private final ReportRepository reportRepository;
+    private final PositionRepository positionRepository;
 
 
     public EmployeeServiceImpl(EmployeeRepository employeeRepository,
                                EmployeePages employeePages,
                                ObjectMapper objectMapper,
-                               ReportRepository reportRepository) {
+                               ReportRepository reportRepository,
+                               PositionRepository positionRepository) {
         this.employeeRepository = employeeRepository;
         this.employeePages = employeePages;
         this.objectMapper = objectMapper;
         this.reportRepository = reportRepository;
+        this.positionRepository = positionRepository;
     }
 
     @Override
@@ -105,10 +113,17 @@ public class EmployeeServiceImpl implements EmployeeService {
             if (!"json".equals(extension)){
                 throw new IllegalJsonFileExeption();
             }
-            List<EmployeeDTO> employeeDTOS = objectMapper.readValue(
-                    employees.getBytes(),
-                    new TypeReference<>() {
-                    });
+            TypeReference<List<UploadEmployeeDTO>> ref = new TypeReference<>() {
+            };
+            var uploadEmployeeDTOS = objectMapper.readValue(employees.getInputStream(),
+                    ref);
+            Map<Integer, Position> positionMap = new HashMap<>();
+            positionRepository.findAllById(uploadEmployeeDTOS.stream()
+                    .map(UploadEmployeeDTO::getPositionId)
+                    .distinct()
+                    .toList()).forEach(x-> positionMap.put(x.getId(),x));
+
+            employeeRepository.saveAll(uploadEmployeeDTOS.stream().map(x-> EmployeeToDTO.toEmployee(x,positionMap)).toList());
 
         } catch (IOException e) {
             e.printStackTrace();
