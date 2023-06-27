@@ -1,5 +1,7 @@
 package skypro.java.course4.weblibrary.controller;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import skypro.java.course4.weblibrary.controller.dto.EmployeeDTO;
 import skypro.java.course4.weblibrary.controller.dto.EmployeeToDTO;
 import skypro.java.course4.weblibrary.exceptions.EmployeeNotFoudExeption;
@@ -69,6 +71,13 @@ public class EmployeeController {
     public List<EmployeeDTO> getEmployeeByPage(@RequestParam(name = "page") int page) {
         return employeeService.getEmployeeByPage(page);
     }
+
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void upload(@RequestPart("employees") MultipartFile employees){
+        employeeService.upload(employees);
+    }
+
+
 
 
 
