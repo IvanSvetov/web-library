@@ -4,21 +4,27 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import java.time.Instant;
 
 @Entity
-@Table(name = "position")
+@Table(name = "report")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+public class Report {
 
-public class Position {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String name;
+    private int id;
 
-    public Position(Integer id) {
-        this.id = id;
-    }
+    @Lob
+    @Column(columnDefinition = "oid")
+    private String report;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Instant createdAt;
+
 }

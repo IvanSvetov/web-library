@@ -26,9 +26,13 @@ public class Employee {
     @JoinColumn(name = "position_id")
     private Position position;
 
+    public Employee(String name, Integer salary, Position position) {
+        this.name = name;
+        this.salary = salary;
+        this.position = position;
+    }
 
-
-//    private Long id;
+    //    private Long id;
 //    @NotBlank(message = "Name is mandatory")
 //    private final String firstName;
 //    @NotBlank(message = "Name is mandatory")

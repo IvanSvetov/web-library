@@ -1,5 +1,7 @@
 package skypro.java.course4.weblibrary.service;
 
+import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
 import skypro.java.course4.weblibrary.controller.dto.EmployeeDTO;
 import skypro.java.course4.weblibrary.model.Employee;
 
@@ -18,9 +20,10 @@ public interface EmployeeService {
     List<EmployeeDTO> getEmployeeWithHighestSalary();
     List<EmployeeDTO> getEmployeeByPosition(int positionId);
     List<EmployeeDTO> getEmployeeByPage(int page);
+    void upload(MultipartFile employees);
+    int report();
 
-
-
+    Resource downloadReport(int id);
 
 //
 //    Employee getEmployeeByID(Long id);
