@@ -27,36 +27,30 @@ public class MyUserDetails implements UserDetails {
                 .map(Collections::singleton)
                 .orElseGet(Collections::emptySet);
     }
-
     @Override
     public String getPassword() {
         return Optional.ofNullable(userDTO)
                 .map(UserDTO::getPassword)
                 .orElse(null);
     }
-
     @Override
     public String getUsername() {
         return Optional.ofNullable(userDTO)
                 .map(UserDTO::getLogin)
                 .orElse(null);
     }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
-
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
-
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
     @Override
     public boolean isEnabled() {
         return true;

@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface PositionRepository extends CrudRepository<Position, Integer> {
 
     Optional<Position> findFirstByName(String name);
+
 }
